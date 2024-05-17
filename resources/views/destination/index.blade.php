@@ -13,9 +13,12 @@
                 <button class="border border-orange-600 rounded-md">Search</button>
             </form>
         </div>
+        @php
+            $urlPath = 'dest.show';
+        @endphp
         <div>
             @foreach ($destinations as $destination)
-                <livewire:destination.show-destination :destination="$destination" />
+                <livewire:destination.show-destination :destination="$destination" :urlPath="$urlPath" />
             @endforeach
         </div>
     </div>

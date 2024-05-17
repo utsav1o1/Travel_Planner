@@ -21,7 +21,7 @@
         </div>
         <div>
 
-            <a href="{{ route('dest.show', $destination) }}">
+            <a href="{{ route($urlPath, $destination) }}">
                 <button>Show</button>
             </a>
         </div>

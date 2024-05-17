@@ -16,7 +16,7 @@ class DestinationController extends Controller
      */
     public function index(Request $request)
     {
-        $destinations = Destination::get();
+        $destinations = Destination::where('approval_status', 1)->get();
         return view('destination.index', ['destinations' => $destinations]);
     }
 
@@ -53,7 +53,7 @@ class DestinationController extends Controller
         }
 
         // Execute query to get destinations
-        $destinations = $query->get();
+        $destinations = $query->where('approval_status', 1)->get();
 
         return view('destination.index', ['destinations' => $destinations]);
     }
@@ -71,25 +71,25 @@ class DestinationController extends Controller
      */
     public function store(Request $request)
     {
-    
-           
-            
+
+
+
         $validatedData = $request->validate([
-            'title' => ['required','string','max:255'],
-            'description' => ['required','string'],
-            'location' => ['required','string','max:255'],
-            'estimated_price' => ['required','numeric'],
-            
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'location' => ['required', 'string', 'max:255'],
+            'estimated_price' => ['required', 'numeric'],
+
         ]);
-        if (Auth::check()) {
+        if (Auth::check() && $request->approval_status === 1) {
             // User is authenticated, get the authenticated user's id
-          
+
             $userId = Auth::id();
-           
+
             $photoPath = $request->file('photo_path')->store('/public/images/destinations');
             $filename = basename($photoPath);
-          
-         
+
+
             Destination::create([
                 'user_id' => $userId,
                 'title' => $validatedData['title'],
@@ -103,8 +103,6 @@ class DestinationController extends Controller
 
             return redirect()->route('user.profile');
         }
-
-    
     }
 
     /**
@@ -112,8 +110,13 @@ class DestinationController extends Controller
      */
     public function show(Destination $destination)
     {
+        if($destination->approval_status===1){
 
-        return view('destination.show', ['destination' => $destination]);
+            return view('destination.show', ['destination' => $destination]);
+        }
+
+        return redirect()->route('dest.index');
+
     }
 
     /**

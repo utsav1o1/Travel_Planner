@@ -8,6 +8,7 @@ class ShowDestination extends Component
 {
 
     public $destination;
+    public $urlPath;
 
     public function render()
     {
